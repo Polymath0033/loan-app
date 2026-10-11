@@ -1,0 +1,117 @@
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/v1/auth/**
+              filters:
+                - StripPrefix=2
+            - id: user-service
+              uri: lb://user-service
+              predicates:
+                - Path=/api/v1/users/**
+              filters:
+                - AuthenticationFilter
+            - id: loan-service
+              uri: lb://loan-service
+              predicates:
+                - Path=/api/v1/loans/**
+              filters:
+                - AuthenticationFilter
+            - id: customer-service
+              uri: lb://customer-service
+              predicates:
+                - Path=/api/v1/customers/**
+              filters:
+                - AuthenticationFilter
+            - id: product-service
+              uri: lb://product-service
+              predicates:
+                - Path=/api/v1/products/**
+              filters:
+                - AuthenticationFilter
+            - id: application-service
+              uri: lb://application-service
+              predicates:
+                - Path=/api/v1/applications/**
+              filters:
+                - AuthenticationFilter
+            - id: scoring-service
+              uri: lb://scoring-service
+              predicates:
+                - Path=/api/v1/scorings/**
+              filters:
+                - AuthenticationFilter
+            - id: loan-account-service
+              uri: lb://loan-account-service
+              predicates:
+                - Path=/api/v1/loan-accounts/**
+              filters:
+                - AuthenticationFilter
+            - id: payment-service
+              uri: lb://payment-service
+              predicates:
+                - Path=/api/v1/payments/**
+              filters:
+                - AuthenticationFilter
+            - id: ledger-service
+              uri: lb://ledger-service
+              predicates:
+                - Path=/api/v1/ledgers/**
+              filters:
+                - AuthenticationFilter
+            - id: servicing-service
+              uri: lb://servicing-service
+              predicates:
+                - Path=/api/v1/servicings/**
+              filters:
+                - AuthenticationFilter
+            - id: notification-service
+              uri: lb://notification-service
+              predicates:
+                - Path=/api/v1/notifications/**
+              filters:
+                - AuthenticationFilter
+            - id: reporting-audit-service
+              uri: lb://reporting-audit-service
+              predicates:
+                - Path=/api/v1/reporting-audits/**
+              filters:
+                - AuthenticationFilter
+
+  jpa:
+    database: postgresql
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: random
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: random
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+      connect-timeout: 10000
+
+# ── JWT ───────────────────────────────────────────────────────────────────────
+# Replace with a strong, randomly-generated Base64 key in production.
+jwt:
+  secret: your-secret-key
+
+# ── Application settings ──────────────────────────────────────────────────────
+app:
+  trusted-proxies: 0
+  ratelimit:
+    max-user-request: 100
+    max-ip-request: 200
+    max-time: 60
+  public-paths: /api/v1/auth/**,/api/v1/public/**,/actuator/**,/api/v1/actuator/**,/api/v1/swagger-ui/**,/api/v1/api-docs/**
